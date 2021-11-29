@@ -1,5 +1,4 @@
 const sha256 = require("crypto-js/sha256");
-
 class Block {
   constructor(timestamp, data, previousHash) {
     this.timestamp = timestamp;
@@ -25,4 +24,5 @@ class Blockchain {
 const fozlolcoin = new Blockchain();
 const block = new Block("2022-01-01", { amount: 5 }, "ABCD");
 fozlolcoin.addBlock(block);
+console.log(block);
 console.log(fozlolcoin);
