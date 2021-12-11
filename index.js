@@ -34,6 +34,8 @@ class Blockchain {
   constructor() {
     this.chain = [this.generateGenesisBlock()];
     this.difficulty =5; 
+
+    this.pendingTransactions = [];
   }
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
@@ -41,11 +43,20 @@ class Blockchain {
   generateGenesisBlock() {
     return new Block("1900-01-01", "genesis", "0000");
   }
-  addBlock(newBlock) {
-    newBlock.previousHash = this.getLatestBlock().hash;
-    newBlock.mineBlock(this.difficulty);
-    this.chain.push(newBlock);
+  createTransaction (transaction){
+    this.pendingTransactions.push(transaction);
   }
+  minePendingTransactions(){
+    let block = new Block(Date.now(),this.pendingTransactions)
+    block.mineBlock(this.difficulty)
+    this.chain.push(block)
+    this.pendingTransactions = [];
+  }
+  // addBlock(newBlock) {
+  //   newBlock.previousHash = this.getLatestBlock().hash;
+  //   newBlock.mineBlock(this.difficulty);
+  //   this.chain.push(newBlock);
+  // }
   isBlockchainValid(){
     for(let i=1; i<this.chain.length; i++){
       const currentBlock = this.chain[i];
@@ -61,10 +72,13 @@ class Blockchain {
   }
 }
 const fozlolcoin = new Blockchain();
-const block1 = new Block("2022-01-01", { amount: 5 });
-fozlolcoin.addBlock(block1);
+// const block1 = new Block("2022-01-01", { amount: 5 });
+// fozlolcoin.addBlock(block1);
 
-const block2 = new Block("2022-01-02", { amount: 10 });
-fozlolcoin.addBlock(block2);
+// const block2 = new Block("2022-01-02", { amount: 10 });
+// fozlolcoin.addBlock(block2);
+fozlolcoin.createTransaction(new Transaction('address1', 'address2',100))
+fozlolcoin.createTransaction(new Transaction('address2', 'address1',50))
+fozlolcoin.minePendingTransactions();
 console.log(fozlolcoin);
 
